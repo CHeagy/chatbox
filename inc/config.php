@@ -1,6 +1,6 @@
 <?php
 ##################################
-##### Chatbox details below #####
+##### Chatbox details below ######
 ##################################
 
 ## Username ##
@@ -19,7 +19,7 @@ $dbdatabase = "chat";
 $baseurl = "http://sites.local/chatbox/";
 
 ##################################
-##### Chatbocx details above #####
+##### Chatbox details above ######
 ##################################
 
 $dsn = 'mysql:host=' . $dbhostname . ';dbname=' . $dbdatabase;
