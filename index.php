@@ -1,3 +1,16 @@
+<?php
+session_start();
+require("inc/config.php");
+require("inc/user.class.php");
+
+if($_SESSION['logged_in'] == true) {
+	$user = new User;
+	$user->getInfo($db, $_SESSION['username']);
+} else {
+	$user = new User;
+	$user->getInfo($db, "Anonymous");
+}
+?>
 <!doctype html>
 <html lang="en">
 	<head>
@@ -9,27 +22,28 @@
 		<title>Chatbox</title>
 
 		<!-- Bootstrap core CSS -->
-		<link href="css/bootstrap.min.css" rel="stylesheet">
+		<link href="<?=$baseurl?>css/bootstrap.min.css" rel="stylesheet">
 
 		<!-- Custom styles for this template -->
-		<link href="css/cover.css" rel="stylesheet">
+		<link href="<?=$baseurl?>css/cover.css" rel="stylesheet">
 	</head>
 
 	<body>
 
 		<div class="container d-flex h-100 p-3 mx-auto flex-column">
-			<header class="masthead mb-auto">
+			<main class="masthead mb-auto">
 				<div class="inner">
 					<form id="new-message">
 						<div class="row outer-container">
 							<div class="col-md-1"></div>
 							<div class="col-md-2">
 								<label for="username" class="sr-only">Username</label>
-								<input type="text" id="username" class="form-control" placeholder="Anonymous">
-							</div>
+								<input type="text" id="username" class="form-control" value="<?=$user->name?>" disabled>
+ 							</div>
 							<div class="col-md-6">
 								<label for="message" class="sr-only">Message</label>
 								<input type="text" id="message" class="form-control" maxlength="300" autocomplete="off" placeholder="Message..." required autofocus>
+								<input type="hidden" name="id" value="<?=$user->id?>">
 							</div>
 							<div class="col-md-2">
 								<button class="btn btn-md btn-primary btn-block" type="submit">Submit</button>
@@ -49,16 +63,20 @@
 					</div>
 					
 				</div>
-			</header>
-
-			<main role="main" class="inner cover">
 			</main>
 
 			<footer class="mastfoot mt-auto">
 				<div class="inner">
 					<nav class="nav nav-masthead justify-content-center">
-						<a class="nav-link" href="https://quinnheagy.com/">Me</a>
-						<a class="nav-link" href="https://github.com/QHeagy/chatbox" target="_blank">GitHub</a>
+						<!--<a class="nav-link" href="https://quinnheagy.com/" target="_blank">Me</a>
+						<a class="nav-link" href="https://github.com/QHeagy/chatbox" target="_blank">GitHub</a>-->
+						<? if($_SESSION['logged_in'] != true) { ?> 
+						<a class="nav-link" href="signup.php">Sign Up</a>
+						<a class="nav-link" href="login.php">Sign In</a>
+						<? } else if($_SESSION['logged_in'] == true) { ?>
+						<a class="nav-link" href="account.php">My Account</a>
+						<a class="nav-link" href="logout.php">Sign Out</a>
+						<? } ?>
 					</nav>
 				</div>
 			</footer>
@@ -68,7 +86,7 @@
 		<!-- Bootstrap core JavaScript
 		================================================== -->
 		<!-- Placed at the end of the document so the pages load faster -->
-		<script src="js/jquery.min.js"></script>
+		<script src="<?=$baseurl?>js/jquery.min.js"></script>
 		<script type="text/javascript">
 			function update_chat() {
 				$.get("chat.php?a=load", function(data, status) {
@@ -83,7 +101,7 @@
 				username = $("#username").val();
 				message = $("#message").val();
 				$("#message").val("");
-				$.get("chat.php?a=submit&username=" + username + "&message=" + message);
+				$.get("chat.php?a=submit&username=" + username + "&message=" + message + "&id=<?=$user->sid?>");
 				update_chat();
 			});
 
