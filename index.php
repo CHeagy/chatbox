@@ -36,11 +36,7 @@ if($_SESSION['logged_in'] == true) {
 					<form id="new-message">
 						<div class="row outer-container">
 							<div class="col-md-1"></div>
-							<div class="col-md-2">
-								<label for="username" class="sr-only">Username</label>
-								<input type="text" id="username" class="form-control" value="<?=$user->name?>" disabled>
- 							</div>
-							<div class="col-md-6">
+							<div class="col-md-8">
 								<label for="message" class="sr-only">Message</label>
 								<input type="text" id="message" class="form-control" maxlength="300" autocomplete="off" placeholder="Message..." required autofocus>
 								<input type="hidden" name="id" value="<?=$user->id?>">
@@ -98,10 +94,9 @@ if($_SESSION['logged_in'] == true) {
 
 			$("#new-message").submit(function(e) {
 				e.preventDefault();
-				username = $("#username").val();
 				message = $("#message").val();
 				$("#message").val("");
-				$.get("chat.php?a=submit&username=" + username + "&message=" + message + "&id=<?=$user->sid?>");
+				$.get("chat.php?a=submit&username=<?=$user->name?>&message=" + message + "&id=<?=$user->sid?>");
 				update_chat();
 			});
 
