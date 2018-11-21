@@ -10,6 +10,7 @@ if($_SESSION['logged_in'] != true) {
 $r[0] = "danger";
 $user = new User;
 $user->getInfoById($db, $_GET['id']);
+$user->postCount($db, $user->id);
 ?>
 <!doctype html>
 <html lang="en">
@@ -38,6 +39,7 @@ $user->getInfoById($db, $_GET['id']);
 							<div class="col-md-4">
 								<h1 class="h3 mb-3 font-weight-normal"><?=$user->name?></h1>
 								<h6>Joined on <?=date("l, F dS Y", $user->created)?></h6>
+								<h6><?=$user->name?> has posted <?=$user->count?> time<? if($user->count != 1) { ?>s<? } ?>.</h6>
 							</div>
 							<div class="col-md-4"></div>
 						</div>

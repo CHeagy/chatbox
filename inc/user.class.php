@@ -7,6 +7,7 @@ class User {
 	public $email;
 	public $sid;
 	public $date_created;
+	public $count;
 
 	function getInfo($db, $username) {
 		$q = $db->prepare("SELECT * FROM `users` WHERE `low_username` = ?");
@@ -100,6 +101,14 @@ class User {
 		}
 
 		return array("success", "Your account has been updated");
+	}
+
+	function postCount($db, $user_id) {
+		$q = $db->prepare("SELECT * FROM `chat` WHERE `user_id` = ?");
+		$q->execute(array($user_id));
+		$r = $q->fetchAll(PDO::FETCH_ASSOC);
+
+		$this->count = sizeof($r);
 	}
 
 }
