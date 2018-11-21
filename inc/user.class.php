@@ -6,6 +6,7 @@ class User {
 	public $id;
 	public $email;
 	public $sid;
+	public $date_created;
 
 	function getInfo($db, $username) {
 		$q = $db->prepare("SELECT * FROM `users` WHERE `low_username` = ?");
@@ -18,6 +19,17 @@ class User {
 		$this->sid = session_id();
 
 		$_SESSION['username'] = $this->name;
+	}
+
+	function getInfoById($db, $id) {
+		$q = $db->prepare("SELECT * FROM `users` WHERE `id` = ?");
+		$q->execute(array(strtolower($id)));
+		$r = $q->fetch(PDO::FETCH_ASSOC);
+
+		$this->name = $r['username'];
+		$this->id = $r['id'];
+		$this->email = $r['email'];
+		$this->created = $r['date_created'];
 	}
 
 	function createUser($db, $username, $password, $vpassword, $email, $vemail) {
@@ -40,8 +52,8 @@ class User {
 			return array("danger", "That username is already in use.");
 		}
 
-		$q = $db->prepare("INSERT INTO `users` (`username`, `low_username`, `password`, `email`) VALUES (?, ?, ?, ?)");
-		$q->execute(array($username, strtolower($username), password_hash($password, PASSWORD_DEFAULT), $email));
+		$q = $db->prepare("INSERT INTO `users` (`username`, `low_username`, `password`, `email`, `date_created`) VALUES (?, ?, ?, ?, ?)");
+		$q->execute(array($username, strtolower($username), password_hash($password, PASSWORD_DEFAULT), $email, time()));
 
 		return array("success", "Your account has been created");
 	}
