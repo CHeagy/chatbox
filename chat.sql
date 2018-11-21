@@ -1,4 +1,4 @@
-# ************************************************************
+﻿# ************************************************************
 # Sequel Pro SQL dump
 # Version 5425
 #
@@ -7,7 +7,7 @@
 #
 # Host: 127.0.0.1 (MySQL 8.0.13)
 # Database: chat
-# Generation Time: 2018-11-20 11:57:56 +0000
+# Generation Time: 2018-11-20 12:52:37 +0000
 # ************************************************************
 
 
@@ -56,16 +56,16 @@ CREATE TABLE `users` (
   `username` varchar(255) NOT NULL DEFAULT '',
   `password` varchar(255) NOT NULL DEFAULT '',
   `email` varchar(255) NOT NULL DEFAULT '',
-  `low_username` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL DEFAULT '',
+  `low_username` varchar(255) NOT NULL DEFAULT '',
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 LOCK TABLES `users` WRITE;
 /*!40000 ALTER TABLE `users` DISABLE KEYS */;
 
 INSERT INTO `users` (`id`, `username`, `password`, `email`, `low_username`)
 VALUES
-	(1,'Anonymous','Anonymous','Anonymous','anonymous');
+	(1,'Anonymous','Anonymous','Anonymous','anonymous'),
 
 /*!40000 ALTER TABLE `users` ENABLE KEYS */;
 UNLOCK TABLES;
