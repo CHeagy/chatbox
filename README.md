@@ -1,5 +1,7 @@
 # Chat box
 
-Import the included sql file and modify `chat.php` to connect to your database.
+Update `inc/config.php` with your database information.
 
-That's it.
+Browse to `install.php` and complete the installation.
+
+Delete `install.php` in order to use the chat box.

@@ -1,18 +1,22 @@
 <?php
 session_start();
 require("inc/config.php");
+function sendIt($db, $username, $password, $email) {
+	$q = $db->prepare("CREATE TABLE `chat` (`id` int(11) unsigned NOT NULL AUTO_INCREMENT, `username` varchar(20) NOT NULL DEFAULT 'Anonymous', `message` text NOT NULL, `date` int(11) NOT NULL, `user_id` int(11) NOT NULL, PRIMARY KEY (`id`)) ENGINE=InnoDB DEFAULT CHARSET=utf8;");
+	$q->execute();
 
-$q = $db->prepare("CREATE TABLE `chat` (`id` int(11) unsigned NOT NULL AUTO_INCREMENT, `username` varchar(20) NOT NULL DEFAULT 'Anonymous', `message` text NOT NULL, `date` int(11) NOT NULL, `user_id` int(11) NOT NULL, PRIMARY KEY (`id`)) ENGINE=InnoDB DEFAULT CHARSET=utf8;");
-$q->execute();
+	$q = $db->prepare("CREATE TABLE `users` (`id` int(11) unsigned NOT NULL AUTO_INCREMENT, `username` varchar(255) NOT NULL DEFAULT '', `password` varchar(255) NOT NULL DEFAULT '', `email` varchar(255) NOT NULL DEFAULT '', `low_username` varchar(255) NOT NULL DEFAULT '', PRIMARY KEY (`id`)) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;");
+	$q->execute();
 
-$q = $db->prepare("CREATE TABLE `users` (`id` int(11) unsigned NOT NULL AUTO_INCREMENT, `username` varchar(255) NOT NULL DEFAULT '', `password` varchar(255) NOT NULL DEFAULT '', `email` varchar(255) NOT NULL DEFAULT '', `low_username` varchar(255) NOT NULL DEFAULT '', PRIMARY KEY (`id`)) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;");
-$q->execute();
+	$q = $db->prepare("INSERT INTO `chat` (`id`, `username`, `message`, `date`, `user_id`) VALUES (?, ?, ?, ?, ?);");
+	$q->execute(array(1, "Lyfa", "Thanks for using my chat box", 1542472793, 1));
 
-$q = $db->prepare("INSERT INTO `chat` (`id`, `username`, `message`, `date`, `user_id`) VALUES (?, ?, ?, ?, ?);");
-$q->execute(array(1, "Lyfa", "Thanks for using my chat box", 1542472793, 1));
+	$q = $db->prepare("INSERT INTO `users` (`id`, `username`, `password`, `email`, `low_username`) VALUES (?, ?, ?, ?, ?);");
+	$q->execute(array(1, "Anonymous", "Anonymous", "Anonymous", "anonymous"));
 
-$q = $db->prepare("INSERT INTO `users` (`id`, `username`, `password`, `email`, `low_username`) VALUES (?, ?, ?, ?, ?);");
-$q->execute(array(1, "Anonymous", "Anonymous", "Anonymous", "anonymous"));
+	$q = $db->prepare("INSERT INTO `users` (`username`, `password`, `email`, `low_username`) VALUES (?, ?, ?, ?);");
+	$q->execute(array($username, password_hash($password, PASSWORD_DEFAULT), $email, strtolower($username)));
+}
 ?>
 <!doctype html>
 <html lang="en">
@@ -39,13 +43,27 @@ $q->execute(array(1, "Anonymous", "Anonymous", "Anonymous", "anonymous"));
 						<div class="row outer-container">
 							<div class="col-md-4"></div>
 							<div class="col-md-4">
-								<div class="alert text-center alert-success">
-									Your chat box has been installed.  
-									<br />
-									You can now create a new user.
-									<hr />
-									Please delete this install file.
-								</div>
+								<? if($_GET['sendit'] == "true") {
+										sendIt($db, $_POST['username'], $_POST['password'], $_POST['email']);
+										?>
+										<div class="alert text-center alert-success">
+											Your chat box has been installed.  
+											<br />
+											You can now create a new user.
+											<hr />
+											Please delete  <pre>install.php</pre> in order to use the chat box.
+										</div>
+									<? } else { ?>
+										<div class="alert text-center alert-success">Please remember to delete <pre>install.php</pre> after completing the install</div>
+										<form action="install.php?sendit=true" method="POST">
+											<input type="text" name="username" class="form-control" placeholder="Username" required autofocus>
+											<input type="password" name="password" class="form-control" placeholder="password" required>
+											<input type="email" name="email" class="form-control" placeholder="Email address" required>
+											<br />
+											<input type="submit" class="btn btn-lg btn-primary btn-block" value="Install">
+										</form>
+
+									<? } ?>
 							</div>
 							<div class="col-md-4"></div>
 						</div>
