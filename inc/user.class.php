@@ -17,9 +17,6 @@ class User {
 		$this->name = $r['username'];
 		$this->id = $r['id'];
 		$this->email = $r['email'];
-		$this->sid = session_id();
-
-		$_SESSION['username'] = $this->name;
 	}
 
 	function getInfoById($db, $id) {
@@ -66,6 +63,8 @@ class User {
 
 		if(password_verify($password, $r['password'])) {
 			$this->getInfo($db, $username);
+			$this->sid = session_id();
+			$_SESSION['username'] = $this->name;
 			$_SESSION['logged_in'] = true;
 			return array("success", "Welcome " . $this->name . "!");
 		} else {

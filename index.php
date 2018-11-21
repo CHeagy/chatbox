@@ -38,7 +38,7 @@ if($_SESSION['logged_in'] == true) {
 							<div class="col-md-1"></div>
 							<div class="col-md-8">
 								<label for="message" class="sr-only">Message</label>
-								<input type="text" id="message" class="form-control" maxlength="300" autocomplete="off" placeholder="Message..." required autofocus>
+								<input type="text" id="message" class="form-control" maxlength="300" autocomplete="off" <? if ($user->name == "Anonymous" && $anonymous_chatters == false) { echo "disabled"; } else { echo "autofocus"; } ?> placeholder="Message..." required >
 								<input type="hidden" name="id" value="<?=$user->id?>">
 							</div>
 							<div class="col-md-2">

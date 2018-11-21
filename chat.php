@@ -12,7 +12,14 @@ if(isset($_GET['a'])) {
 		$user = new User;
 		$user->getInfo($db, $_GET['username']);
 
-		if($_GET['message'] != "") {
+		if($user->name == "Anonymous" && $anonymous_chatters == false) {
+			$poster = false;
+		} else {
+			$poster = true;
+		}
+
+
+		if($_GET['message'] != "" && ($user->name == $_SESSION['username']) && $poster == true) {
 			$q = $db->prepare("INSERT INTO chat (username, message, date, user_id) VALUES (?, ?, ?, ?)");
 			$q->execute(array($user->name, $_GET['message'], time(), $user->id));
 		}

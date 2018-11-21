@@ -21,6 +21,9 @@ $baseurl = "http://sites.local/chatbox/";
 ## Number of messages to load at once ##
 $load_limit = 25;
 
+## Allow anonymous users to chat? ##
+$anonymous_chatters = true;
+
 ##################################
 ##### Chatbox details above ######
 ##################################
