@@ -18,6 +18,9 @@ $dbdatabase = "chat";
 ## Base site ##
 $baseurl = "http://sites.local/chatbox/";
 
+## Number of messages to load at once ##
+$load_limit = 25;
+
 ##################################
 ##### Chatbox details above ######
 ##################################
