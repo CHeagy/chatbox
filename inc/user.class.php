@@ -14,9 +14,7 @@ class User {
 		$q->execute(array(strtolower($username)));
 		$r = $q->fetch(PDO::FETCH_ASSOC);
 
-		$this->name = $r['username'];
-		$this->id = $r['id'];
-		$this->email = $r['email'];
+		$this->loadUser($r);
 	}
 
 	function getInfoById($db, $id) {
@@ -24,10 +22,15 @@ class User {
 		$q->execute(array(strtolower($id)));
 		$r = $q->fetch(PDO::FETCH_ASSOC);
 
-		$this->name = $r['username'];
-		$this->id = $r['id'];
-		$this->email = $r['email'];
-		$this->created = $r['date_created'];
+		$this->loadUser($r);
+	}
+
+	function loadUser($user) {
+		$this->name = $user['username'];
+		$this->id = $user['id'];
+		$this->email = $user['email'];
+		$this->created = $user['date_created'];
+		$this->sid = session_id();
 	}
 
 	function createUser($db, $username, $password, $vpassword, $email, $vemail) {
