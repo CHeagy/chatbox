@@ -82,12 +82,11 @@ function sendIt($db, $username, $password, $email) {
 											If you continue to have errors<br />please <a href="mailto:quinn@quinnheagy.com?subject=Chatbox installation errors" class="text-muted">contact me.</a>
 										</div>
 										<? } ?>
-									<? } else if($_GET['sendit'] == "db-error") { ?>
+									<? } else if($db_error == true) { ?>
 										<div class="alert text-center alert-danger">
 											Database connection error.
 											<br /><br />
-											Please edit <pre>inc/config.php</pre> to update your database connection details.
-											<br />
+											Please verify everything is correct in<pre>inc/config.php</pre>
 											<a href="install.php" class="text-muted">Try again</a>
 										</div>
 									<? } else { ?>

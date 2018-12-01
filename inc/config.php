@@ -37,8 +37,10 @@ if(file_exists("install.php") && $r['filename'] != "install") {
 try {
 	$dsn = 'mysql:host=' . $dbhostname . ';dbname=' . $dbdatabase;
 	$db = new PDO($dsn, $dbusername, $dbpassword);
+	$db_error = false;
 } catch (Exception $e) {
-	if(!isset($_GET['sendit']) && $_GET['sendit'] != "db-error")
-		header('location: install.php?sendit=db-error');
+	$db_error = true;
+	if($r['filename'] != "install")
+		header('location: install.php');
 }
 ?>
