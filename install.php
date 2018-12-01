@@ -3,19 +3,27 @@ session_start();
 require("inc/config.php");
 function sendIt($db, $username, $password, $email) {
 	$q = $db->prepare("CREATE TABLE `chat` (`id` int(11) unsigned NOT NULL AUTO_INCREMENT, `username` varchar(20) NOT NULL DEFAULT 'Anonymous', `message` text NOT NULL, `date` int(11) NOT NULL, `user_id` int(11) NOT NULL, PRIMARY KEY (`id`)) ENGINE=InnoDB DEFAULT CHARSET=utf8;");
-	$q->execute();
+	$try[] = $q->execute();
 
 	$q = $db->prepare("CREATE TABLE `users` (`id` int(11) unsigned NOT NULL AUTO_INCREMENT, `username` varchar(255) NOT NULL DEFAULT '', `password` varchar(255) NOT NULL DEFAULT '', `email` varchar(255) NOT NULL DEFAULT '', `low_username` varchar(255) NOT NULL DEFAULT '', `date_created` int(20) NOT NULL, PRIMARY KEY (`id`)) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;");
-	$q->execute();
+	$try[] = $q->execute();
 
 	$q = $db->prepare("INSERT INTO `chat` (`id`, `username`, `message`, `date`, `user_id`) VALUES (?, ?, ?, ?, ?);");
-	$q->execute(array(1, "Lyfa", "Thanks for using my chat box", 1542472793, 1));
+	$try[] = $q->execute(array(1, "Lyfa", "Thanks for using my chat box", 1542472793, 1));
 
 	$q = $db->prepare("INSERT INTO `users` (`id`, `username`, `password`, `email`, `low_username`, `date_created`) VALUES (?, ?, ?, ?, ?, ?);");
-	$q->execute(array(1, "Anonymous", "Anonymous", "Anonymous", "anonymous", time()));
+	$try[] = $q->execute(array(1, "Anonymous", "Anonymous", "Anonymous", "anonymous", time()));
 
 	$q = $db->prepare("INSERT INTO `users` (`username`, `password`, `email`, `low_username`, `date_created`) VALUES (?, ?, ?, ?, ?);");
-	$q->execute(array($username, password_hash($password, PASSWORD_DEFAULT), $email, strtolower($username), time()));
+	$stry[] = $q->execute(array($username, password_hash($password, PASSWORD_DEFAULT), $email, strtolower($username), time()));
+
+	if(in_array(false, $try)) {
+		$success = false;
+	} else {
+		$success = true;
+	}
+
+	return $success;
 }
 ?>
 <!doctype html>
@@ -44,8 +52,9 @@ function sendIt($db, $username, $password, $email) {
 							<div class="col-md-4"></div>
 							<div class="col-md-4">
 								<? if($_GET['sendit'] == "true") {
-										sendIt($db, $_POST['username'], $_POST['password'], $_POST['email']);
-										?>
+										$success = sendIt($db, $_POST['username'], $_POST['password'], $_POST['email']);
+										
+										if($success == true) { ?>
 										<div class="alert text-center alert-success">
 											Your chat box has been installed.  
 											<br />
@@ -53,6 +62,26 @@ function sendIt($db, $username, $password, $email) {
 											<hr />
 											Please delete  <pre>install.php</pre> in order to use the chat box.
 										</div>
+										<? } else if ($success == false) { ?>
+										<div class="alert text-center alert-danger">
+											There has been an error while trying to install your chatbox.
+											<br />
+											<br />
+											Please check the following
+											<br />
+											<br />
+											<div class="text-left">
+												<dl>
+													<dt>inc/config.php</dt>
+													<dd>Ensure everything is setup correctly.</dd>
+													<dt>`<?=$dbdatabase?>`</dt>
+													<dd>Ensure your database is empty</dd>
+												</dl>
+											</div>
+											<br />
+											If you continue to have errors<br />please <a href="mailto:quinn@quinnheagy.com?subject=Chatbox installation errors" class="text-muted">contact me.</a>
+										</div>
+										<? } ?>
 									<? } else if($_GET['sendit'] == "db-error") { ?>
 										<div class="alert text-center alert-danger">
 											Database connection error.
@@ -70,7 +99,6 @@ function sendIt($db, $username, $password, $email) {
 											<br />
 											<input type="submit" class="btn btn-lg btn-primary btn-block" value="Install">
 										</form>
-
 									<? } ?>
 							</div>
 							<div class="col-md-4"></div>
