@@ -53,6 +53,14 @@ function sendIt($db, $username, $password, $email) {
 											<hr />
 											Please delete  <pre>install.php</pre> in order to use the chat box.
 										</div>
+									<? } else if($_GET['sendit'] == "db-error") { ?>
+										<div class="alert text-center alert-danger">
+											Database connection error.
+											<br /><br />
+											Please edit <pre>inc/config.php</pre> to update your database connection details.
+											<br />
+											<a href="install.php" class="text-muted">Try again</a>
+										</div>
 									<? } else { ?>
 										<div class="alert text-center alert-success">Please remember to delete <pre>install.php</pre> after completing the install</div>
 										<form action="install.php?sendit=true" method="POST">
