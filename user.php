@@ -6,11 +6,19 @@ require("inc/user.class.php");
 if($_SESSION['logged_in'] != true) {
 	header('location: login.php');
 }
-
-$r[0] = "danger";
 $user = new User;
-$user->getInfoById($db, $_GET['id']);
-$user->postCount($db, $user->id);
+$user->getInfo($db, $_SESSION['username']);
+
+$user_page = new User;
+$user_page->getInfoById($db, $_GET['id']);
+$user_page->postCount($db, $user_page->id);
+
+if(isset($_POST['comment'])) {
+	$user->post_comment($db, $_GET['id'], $user->id, $_POST['comment']);
+	var_dump($_POST);
+}
+
+//$comments = $user_page->get_comments($db, $_GET['id']);
 ?>
 <!doctype html>
 <html lang="en">
@@ -37,15 +45,50 @@ $user->postCount($db, $user->id);
 						<div class="row outer-container">
 							<div class="col-md-4"></div>
 							<div class="col-md-4">
-								<h1 class="h3 mb-3 font-weight-normal"><?=$user->name?></h1>
-								<h6>Joined on <?=date("l, F jS Y", $user->created)?></h6>
-								<h6><?=$user->name?> has posted <?=$user->count?> time<? if($user->count != 1) { ?>s<? } ?>.</h6>
+								<h1 class="h3 mb-3 font-weight-normal"><?=$user_page->name?></h1>
+								<h6>Joined on <?=date("l, F jS Y", $user_page->created)?></h6>
+								<h6><?=$user_page->name?> has posted <?=$user_page->count?> time<? if($user_page->count != 1) { ?>s<? } ?>.</h6>
 							</div>
 							<div class="col-md-4"></div>
+						</div>
+						<br /><br />
+						<div class="row outer-container">
+							<div class="col-md-4"></div>
+							<div class="col-md-4">
+								<form method="POST" id="new-message">
+									<textarea name="comment" class="form-control" id="message" placeholder="New comment..."></textarea>
+									<input type="submit" class="form-control" value="Submit" />
+									<br />
+								</form>
+							</div>
+							<div class="col-md-4"></div>
+						</div>
+						<div class="chat-container" id="chat-container">
+							
 						</div>
 				</div>
 			</main>
 <? require("style/footer.php"); ?>
 		</div>
 	</body>
+	<script src="<?=$baseurl?>js/jquery.min.js"></script>
+	<script type="text/javascript">
+		function update_comments() {
+			$.get("ajax/user.comments.php?a=load&user_id=<?=$_GET['id']?>", function(data, status) {
+					if(status == "success") {
+						$("#chat-container").html(data);
+					}
+				});
+		}
+
+		$("#new-message").submit(function(e) {
+			e.preventDefault();
+			message = $("#message").val();
+			$("#message").val("");
+			$.get("ajax/user.comments.php?a=post&user_id=<?=$_GET['id']?>&poster_id=<?=$user->id?>&message=" + message + "&id=<?=$user_page->sid?>");
+			update_comments();
+		});
+
+		update_comments();
+	</script>
 </html>

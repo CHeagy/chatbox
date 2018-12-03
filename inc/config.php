@@ -1,6 +1,7 @@
 <?php
 ##################################
 ##### Chatbox details below ######
+##### Version 0.5			######
 ##################################
 
 ## Username ##
@@ -23,6 +24,9 @@ $load_limit = 25;
 
 ## Allow anonymous users to chat? ##
 $anonymous_chatters = true;
+
+## Max number of comments on user pages ##
+$max_user_comments = 25;
 
 ##################################
 ##### Chatbox details above ######

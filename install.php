@@ -8,6 +8,9 @@ function sendIt($db, $username, $password, $email) {
 	$q = $db->prepare("CREATE TABLE `users` (`id` int(11) unsigned NOT NULL AUTO_INCREMENT, `username` varchar(255) NOT NULL DEFAULT '', `password` varchar(255) NOT NULL DEFAULT '', `email` varchar(255) NOT NULL DEFAULT '', `low_username` varchar(255) NOT NULL DEFAULT '', `date_created` int(20) NOT NULL, PRIMARY KEY (`id`)) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;");
 	$try[] = $q->execute();
 
+	$q = $db->prepare("CREATE TABLE `user_comments` (`id` int(11) unsigned NOT NULL AUTO_INCREMENT, `user_id` int(11) NOT NULL, `poster_id` int(11) NOT NULL, `post_date` int(11) NOT NULL, `comment` text CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL, PRIMARY KEY (`id`)) DEFAULT CHARSET=utf8mb4;");
+	$try[] = $q->execute();
+
 	$q = $db->prepare("INSERT INTO `chat` (`id`, `username`, `message`, `date`, `user_id`) VALUES (?, ?, ?, ?, ?);");
 	$try[] = $q->execute(array(1, "Lyfa", "Thanks for using my chat box", 1542472793, 1));
 

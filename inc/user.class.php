@@ -19,10 +19,18 @@ class User {
 
 	function getInfoById($db, $id) {
 		$q = $db->prepare("SELECT * FROM `users` WHERE `id` = ?");
-		$q->execute(array(strtolower($id)));
+		$q->execute(array(($id)));
 		$r = $q->fetch(PDO::FETCH_ASSOC);
 
 		$this->loadUser($r);
+	}
+
+	function returnInfoById($db, $id) {
+		$q = $db->prepare("SELECT * FROM `users` WHERE `id` = ?");
+		$q->execute(array(($id)));
+		$r = $q->fetch(PDO::FETCH_ASSOC);
+
+		return $r;
 	}
 
 	function loadUser($user) {
@@ -111,6 +119,19 @@ class User {
 		$r = $q->fetchAll(PDO::FETCH_ASSOC);
 
 		$this->count = sizeof($r);
+	}
+
+	function get_comments($db, $id) {
+		$q = $db->prepare("SELECT * FROM `user_comments` WHERE `user_id` = ? ORDER BY `id` DESC");
+		$q->execute(array($id));
+		$r = $q->fetchAll(PDO::FETCH_ASSOC);
+
+		return $r;
+	}
+
+	function post_comment($db, $id, $poster_id, $comment) {
+		$q = $db->prepare("INSERT INTO `user_comments` (`user_id`, `poster_id`, `post_date`, `comment`) VALUES (?, ?, ?, ?)");
+		$q->execute(array($id, $poster_id, time(), $comment));
 	}
 
 }

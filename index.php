@@ -70,7 +70,7 @@ if($_SESSION['logged_in'] == true) {
 		<script src="<?=$baseurl?>js/jquery.min.js"></script>
 		<script type="text/javascript">
 			function update_chat() {
-				$.get("chat.php?a=load", function(data, status) {
+				$.get("ajax/chat.php?a=load", function(data, status) {
 					if(status == "success") {
 						$(".chat-messages").html(data);
 					}
@@ -81,7 +81,7 @@ if($_SESSION['logged_in'] == true) {
 				e.preventDefault();
 				message = $("#message").val();
 				$("#message").val("");
-				$.get("chat.php?a=submit&username=<?=$user->name?>&message=" + message + "&id=<?=$user->sid?>");
+				$.get("ajax/chat.php?a=submit&username=<?=$user->name?>&message=" + message + "&id=<?=$user->sid?>");
 				update_chat();
 			});
 

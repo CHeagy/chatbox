@@ -1,7 +1,7 @@
 <?php
 session_start();
-require("inc/config.php");
-require("inc/user.class.php");
+require("../inc/config.php");
+require("../inc/user.class.php");
 
 if(isset($_GET['a'])) {
 	if($_GET['a'] == "submit" && $_GET['id'] == session_id()) {
@@ -31,7 +31,6 @@ if(isset($_GET['a'])) {
 		arsort($r);
 
 		foreach($r as $result) {
-			/*$output .= '<div class="row p-2 mb-2 bg-dark text-white individual-message"><div class=" text-right col-md-2 text-muted small">' . date("m/d/y", $result['date']) . '<br />' . date("h:ia", $result['date']) . '</div> <div class="col-md-10 text-left"><strong>' . $result['username'] . '</strong>: ' . htmlentities($result['message']) . '</div></div>';*/
 			$output .= '<div class="p-2 mb-2 bg-dark text-left text-white individual-message"><span class="text-muted small">' . date("m/d/y", $result['date']) . ' @ ' . date("h:ia", $result['date']) . '</span> <strong><a href="user.php?id=' . $result['user_id'] . '" target="_blank">[' . $result['username'] . ']</a></strong>: ' . htmlentities($result['message']) . '</div>';
 		}
 
