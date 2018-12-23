@@ -96,7 +96,7 @@ function sendIt($db, $username, $password, $email) {
 										<div class="alert text-center alert-success">Please remember to delete <pre>install.php</pre> after completing the install</div>
 										<form action="install.php?sendit=true" method="POST">
 											<input type="text" name="username" class="form-control" placeholder="Username" required autofocus>
-											<input type="password" name="password" class="form-control" placeholder="password" required>
+											<input type="password" name="password" class="form-control" placeholder="Password" required>
 											<input type="email" name="email" class="form-control" placeholder="Email address" required>
 											<br />
 											<input type="submit" class="btn btn-lg btn-primary btn-block" value="Install">
